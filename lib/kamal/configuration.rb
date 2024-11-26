@@ -263,7 +263,7 @@ class Kamal::Configuration
   end
 
   def proxy_image
-    "basecamp/kamal-proxy:#{PROXY_MINIMUM_VERSION}"
+    "docker.io/basecamp/kamal-proxy:#{PROXY_MINIMUM_VERSION}"
   end
 
   def proxy_container_name
