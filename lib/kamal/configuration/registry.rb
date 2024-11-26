@@ -1,6 +1,8 @@
 class Kamal::Configuration::Registry
   include Kamal::Configuration::Validation
 
+  DEFAULT_REGISTRY = "docker.io"
+
   attr_reader :registry_config, :secrets
 
   def initialize(config:)
@@ -10,7 +12,7 @@ class Kamal::Configuration::Registry
   end
 
   def server
-    registry_config["server"]
+    registry_config["server"] || DEFAULT_REGISTRY
   end
 
   def username
