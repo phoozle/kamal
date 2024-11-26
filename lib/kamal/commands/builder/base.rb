@@ -10,7 +10,15 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
     to: :builder_config
 
   def clean
+    send("#{config.container_manager.manager}_clean")
+  end
+
+  def docker_clean
     docker :image, :rm, "--force", config.absolute_image
+  end
+
+  def podman_clean
+    podman :image, :rm, "--force", config.absolute_image
   end
 
   def push
@@ -32,11 +40,19 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
       *build_options,
       build_context
 
-    # TODO: need seperate push command
+    podman :push, config.absolute_image
   end
 
   def pull
+    send("#{config.container_manager.manager}_pull")
+  end
+
+  def docker_pull
     docker :pull, config.absolute_image
+  end
+
+  def podman_pull
+    podman :pull, config.absolute_image
   end
 
   def info
@@ -59,7 +75,7 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
 
   def validate_image
     pipe \
-      docker(:inspect, "-f", "'{{ .Config.Labels.service }}'", config.absolute_image),
+      container_manager(:inspect, "-f", "'{{ .Config.Labels.service }}'", config.absolute_image),
       any(
         [ :grep, "-x", config.service ],
         "(echo \"Image #{config.absolute_image} is missing the 'service' label\" && exit 1)"

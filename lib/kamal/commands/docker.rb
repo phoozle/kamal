@@ -16,7 +16,7 @@ class Kamal::Commands::Docker < Kamal::Commands::Base
   end
 
   def name
-    "Podman"
+    "Docker"
   end
 
   # Do we have superuser access to install Docker and start system services?
