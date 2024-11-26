@@ -141,6 +141,11 @@ ssh:
 builder:
   ...
 
+# Container manager options
+#
+container_manager:
+  ...
+
 # Accessories
 #
 # Additional services to run in Docker, see kamal docs accessory:

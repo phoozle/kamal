@@ -1,0 +1,4 @@
+# Container Manager
+#
+container_manager:
+  manager: podman

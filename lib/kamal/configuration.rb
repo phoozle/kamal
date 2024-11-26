@@ -10,7 +10,7 @@ class Kamal::Configuration
   delegate :argumentize, :optionize, to: Kamal::Utils
 
   attr_reader :destination, :raw_config, :secrets
-  attr_reader :accessories, :aliases, :boot, :builder, :env, :logging, :proxy, :servers, :ssh, :sshkit, :registry
+  attr_reader :accessories, :aliases, :boot, :builder, :container_manager, :env, :logging, :proxy, :servers, :ssh, :sshkit, :registry
 
   include Validation
 
@@ -65,6 +65,7 @@ class Kamal::Configuration
     @aliases = @raw_config.aliases&.keys&.to_h { |name| [ name, Alias.new(name, config: self) ] } || {}
     @boot = Boot.new(config: self)
     @builder = Builder.new(config: self)
+    @container_manager = ContainerManager.new(config: self)
     @env = Env.new(config: @raw_config.env || {}, secrets: secrets)
 
     @logging = Logging.new(logging_config: @raw_config.logging)
@@ -291,6 +292,7 @@ class Kamal::Configuration
       ssh_options: ssh.to_h,
       sshkit: sshkit.to_h,
       builder: builder.to_h,
+      container_manager: container_manager,
       accessories: raw_config.accessories,
       logging: logging_args
     }.compact

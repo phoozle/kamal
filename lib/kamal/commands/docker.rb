@@ -1,5 +1,6 @@
 class Kamal::Commands::Docker < Kamal::Commands::Base
   # Install Docker using the https://github.com/docker/docker-install convenience script.
+
   def install
     pipe get_docker, :sh
   end
@@ -12,6 +13,10 @@ class Kamal::Commands::Docker < Kamal::Commands::Base
   # Checks the Docker server version. Fails if Docker is not running.
   def running?
     docker :version
+  end
+
+  def name
+    "Podman"
   end
 
   # Do we have superuser access to install Docker and start system services?
@@ -30,5 +35,9 @@ class Kamal::Commands::Docker < Kamal::Commands::Base
           [ :curl, "-fsSL", "https://get.docker.com" ],
           [ :wget, "-O -", "https://get.docker.com" ],
           [ :echo, "\"exit 1\"" ]
+    end
+
+    def podman
+      KAMAL.podman
     end
 end

@@ -101,6 +101,14 @@ class Kamal::Commander
     @docker ||= Kamal::Commands::Docker.new(config)
   end
 
+  def podman
+    @podman ||= Kamal::Commands::Podman.new(config)
+  end
+
+  def container_manager
+    send(config.container_manager.manager)
+  end
+
   def hook
     @hook ||= Kamal::Commands::Hook.new(config)
   end

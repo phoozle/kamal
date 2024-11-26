@@ -74,6 +74,10 @@ module Kamal::Commands
         args.compact.unshift :docker
       end
 
+      def podman(*args)
+        args.compact.unshift :podman
+      end
+
       def git(*args, path: nil)
         [ :git, *([ "-C", path ] if path), *args.compact ]
       end

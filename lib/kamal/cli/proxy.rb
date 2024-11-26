@@ -3,7 +3,7 @@ class Kamal::Cli::Proxy < Kamal::Cli::Base
   def boot
     with_lock do
       on(KAMAL.hosts) do |host|
-        execute *KAMAL.docker.create_network
+        execute *KAMAL.container_manager.create_network
       rescue SSHKit::Command::Failed => e
         raise unless e.message.include?("already exists")
       end
