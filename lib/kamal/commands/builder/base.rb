@@ -14,12 +14,25 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
   end
 
   def push
+    send("#{config.container_manager.manager}_push")
+  end
+
+  def docker_push
     docker :buildx, :build,
       "--push",
       *platform_options(arches),
       *([ "--builder", builder_name ] unless docker_driver?),
       *build_options,
       build_context
+  end
+
+  def podman_push
+    podman :buildx, :build,
+      *platform_options(arches),
+      *build_options,
+      build_context
+
+    # TODO: need seperate push command
   end
 
   def pull
