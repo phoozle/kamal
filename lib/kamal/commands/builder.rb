@@ -37,20 +37,20 @@ class Kamal::Commands::Builder < Kamal::Commands::Base
 
   def ensure_local_dependencies_installed
     if name.native?
-      ensure_local_docker_installed
+      ensure_local_container_manager_installed
     else
       combine \
-        ensure_local_docker_installed,
+        ensure_local_container_manager_installed,
         ensure_local_buildx_installed
     end
   end
 
   private
-    def ensure_local_docker_installed
-      docker "--version"
+    def ensure_local_container_manager_installed
+      container_manager "--version"
     end
 
     def ensure_local_buildx_installed
-      docker :buildx, "version"
+      container_manager :buildx, "version"
     end
 end

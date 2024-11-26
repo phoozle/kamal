@@ -78,6 +78,10 @@ module Kamal::Commands
         args.compact.unshift :podman
       end
 
+      def container_manager(*args)
+        send(config.container_manager.manager, *args)
+      end
+
       def git(*args, path: nil)
         [ :git, *([ "-C", path ] if path), *args.compact ]
       end
