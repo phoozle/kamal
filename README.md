@@ -16,6 +16,21 @@ net.ipv4.ip_unprivileged_port_start=80
 
 And then run `sudo sysctl -p` to apply.
 
+# Kamal Proxy
+
+So far I have been having trouble with getting kamal-proxy to bind to port 80/443.
+Current workaround is to edit the proxy options file on the app server:
+```
+# .kamal/proxy/options 
+-e HTTP_PORT=8080 -e HTTPS_PORT=4443
+```
+
+Then use `redir` on the host:
+```
+nohup sudo redir --lport=80 --cport=8080 &
+nohup sudo redir --lport=443 --cport=4443 &
+```
+
 # Kamal: Deploy web apps anywhere
 
 From bare metal to cloud VMs, deploy web apps anywhere with zero downtime. Kamal uses [kamal-proxy](https://github.com/basecamp/kamal-proxy) to seamlessly switch requests between containers. Works seamlessly across multiple servers, using SSHKit to execute commands. Originally built for Rails apps, Kamal will work with any type of web app that can be containerized with Docker.
