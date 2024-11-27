@@ -35,12 +35,15 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
   end
 
   def podman_push
-    podman :buildx, :build,
-      *platform_options(arches),
-      *build_options,
-      build_context
+    combine \
+      podman(:buildx, :build,
+        *platform_options(arches),
+        *build_options,
+        build_context
+      ),
+      podman(:push, config.absolute_image)
 
-    podman :push, config.absolute_image
+      ## podman :tag, config.image, config.latest_image
   end
 
   def pull
@@ -48,7 +51,7 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
   end
 
   def docker_pull
-    docker :pull, config.absolute_image
+    container_manager :pull, config.absolute_image
   end
 
   def podman_pull
@@ -57,8 +60,8 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
 
   def info
     combine \
-      docker(:context, :ls),
-      docker(:buildx, :ls)
+      container_manager(:context, :ls),
+      container_manager(:buildx, :ls)
   end
 
   def inspect_builder

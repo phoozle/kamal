@@ -14,7 +14,8 @@ class Kamal::Commands::App < Kamal::Commands::Base
   end
 
   def run(hostname: nil)
-    docker :run,
+    container_manager \
+      :run,
       "--detach",
       "--restart unless-stopped",
       "--name", container_name,
@@ -33,21 +34,21 @@ class Kamal::Commands::App < Kamal::Commands::Base
   end
 
   def start
-    docker :start, container_name
+    container_manager :start, container_name
   end
 
   def status(version:)
-    pipe container_id_for_version(version), xargs(docker(:inspect, "--format", DOCKER_HEALTH_STATUS_FORMAT))
+    pipe container_id_for_version(version), xargs(container_manager(:inspect, "--format", DOCKER_HEALTH_STATUS_FORMAT))
   end
 
   def stop(version: nil)
     pipe \
       version ? container_id_for_version(version) : current_running_container_id,
-      xargs(docker(:stop, *role.stop_args))
+      xargs(container_manager(:stop, *role.stop_args))
   end
 
   def info
-    docker :ps, *container_filter_args
+    container_manager :ps, *container_filter_args
   end
 
 
@@ -67,7 +68,7 @@ class Kamal::Commands::App < Kamal::Commands::Base
 
   def list_versions(*docker_args, statuses: nil)
     pipe \
-      docker(:ps, *container_filter_args(statuses: statuses), *docker_args, "--format", '"{{.Names}}"'),
+      container_manager(:ps, *container_filter_args(statuses: statuses), *docker_args, "--format", '"{{.Names}}"'),
       extract_version_from_name
   end
 
@@ -77,7 +78,7 @@ class Kamal::Commands::App < Kamal::Commands::Base
 
   private
     def latest_image_id
-      docker :image, :ls, *argumentize("--filter", "reference=#{config.latest_image}"), "--format", "'{{.ID}}'"
+      container_manager :image, :ls, *argumentize("--filter", "reference=#{config.latest_image}"), "--format", "'{{.ID}}'"
     end
 
     def current_running_container(format:)
@@ -91,7 +92,7 @@ class Kamal::Commands::App < Kamal::Commands::Base
     end
 
     def latest_container(format:, filters: nil)
-      docker :ps, "--latest", *format, *container_filter_args(statuses: ACTIVE_DOCKER_STATUSES), argumentize("--filter", filters)
+      container_manager :ps, "--latest", *format, *container_filter_args(statuses: ACTIVE_DOCKER_STATUSES), argumentize("--filter", filters)
     end
 
     def container_filter_args(statuses: nil)

@@ -11,6 +11,6 @@ module Kamal::Commands::App::Proxy
 
   private
     def proxy_exec(*command)
-      docker :exec, proxy_container_name, "kamal-proxy", *command
+      container_manager :exec, proxy_container_name, "kamal-proxy", *command
     end
 end
