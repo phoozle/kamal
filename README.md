@@ -22,7 +22,7 @@ So far I have been having trouble with getting kamal-proxy to bind to port 80/44
 Current workaround is to edit the proxy options file on the app server:
 ```
 # .kamal/proxy/options 
--e HTTP_PORT=8080 -e HTTPS_PORT=4443
+-e HTTP_PORT=8080 -e HTTPS_PORT=4443 --publish 8080:8080 --publish 4443:4443 --log-opt max-size=10m
 ```
 
 Then use `redir` on the host:
