@@ -34,6 +34,10 @@ module Kamal::Commands
       [ :rm, path ]
     end
 
+    def podman?
+      config.container_manager.podman?
+    end
+
     private
       def combine(*commands, by: "&&")
         commands

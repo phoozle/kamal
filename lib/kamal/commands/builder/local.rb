@@ -1,10 +1,10 @@
 class Kamal::Commands::Builder::Local < Kamal::Commands::Builder::Base
   def create
-    container_manager :buildx, :create, "--name", builder_name, "--driver=#{driver}" unless docker_driver?
+    docker :buildx, :create, "--name", builder_name, "--driver=#{driver}" unless podman? || docker_driver?
   end
 
   def remove
-    container_manager :buildx, :rm, builder_name unless docker_driver?
+    docker :buildx, :rm, builder_name unless podman? || docker_driver?
   end
 
   private

@@ -42,8 +42,6 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
         build_context
       ),
       podman(:push, config.absolute_image)
-
-      ## podman :tag, config.image, config.latest_image
   end
 
   def pull
@@ -59,13 +57,21 @@ class Kamal::Commands::Builder::Base < Kamal::Commands::Base
   end
 
   def info
+    send("#{config.container_manager.manager}_info")
+  end
+
+  def docker_info
     combine \
-      container_manager(:context, :ls),
-      container_manager(:buildx, :ls)
+      docker(:context, :ls),
+      docker(:buildx, :ls)
+  end
+
+  def podman_info
+    podman :version
   end
 
   def inspect_builder
-    docker :buildx, :inspect, builder_name unless docker_driver?
+    docker :buildx, :inspect, builder_name unless podman? || docker_driver?
   end
 
   def build_options
